@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <script src="jquery/jquery-2.2.0.min.js"></script>
+        <script>
+            var my_api_key = "923e2d1e110cede03db46682ba609dd5";
+            
+            // depois de pagina carregada
+            $(document).ready(function () {
+                // atribuir funcionalidade ao botoes
+                $("#bGetImages").click(function () {
+                    // obter as imagens
+                    
+                    $.ajax("https://api.flickr.com/services/rest/", {
+                        method : "GET",
+                        dataType : "json",
+                        data : {
+                            "method" : "flickr.photos.getRecent",
+                            "api_key" : "e137517c5s3s29asesb76ac3146sfcf4",
+                            "per_page" : 10,
+                            "page" : 1,
+                            "format" : "json",
+                            "nojsoncallback" : 1,
+                        },
+                        success : function (data) {
+                            console.log(data);
+//https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+                            
+                            $.each(data.photos.photo, function (i,d) {
+                                photo_id = d.id;
+                                photo_farm = d.farm;
+                                photo_secret = d.secret;
+                                photo_server = d.server;
+
+                                photo_url = "https://farm"+photo_farm+".staticflickr.com/"+photo_server+"/"+photo_id+"_"+photo_secret+"_q.jpg";
+                                img = $("<img/>").attr("src",photo_url);
+                                $("#content").append(img);
+                                console.log(photo_url);
+                            })
+                            
+                            //photo_id = data.photos.photo[0].id;
+                            //photo_farm = data.photos.photo[0].farm;
+                            //photo_secret = data.photos.photo[0].secret;
+                            //photo_server = data.photos.photo[0].server;
+
+                            //photo_url = "https://farm"+photo_farm+".staticflickr.com/"+photo_server+"/"+photo_id+"_"+photo_secret+"_q.jpg";
+                            
+                            //img = $("<img/>").attr("src",photo_url);
+                            //$("#content").append(img);
+                            //console.log(photo_url);
+
+                        }
+                    })
+                });
+                
+                $("#bClear").click(function () {
+                    $("#content").empty();
+                });
+            });
+          
+        
+            
+        </script>
+    </head>
+    <body>
+        <div id="title">
+            Galeria do Flickr
+        </div>
+        <div id ="control">
+            <button id="bGetImages"> Obter </button>
+            <button id="bClear"> Limpar </button>
+        </div>
+        <div id="content">
+            <h1>Substituir a API key no código</h1>
+        </div>
+    </body>
+</html>
